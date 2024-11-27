@@ -1,0 +1,23 @@
+# Replace with the name of your cluster
+cluster_name = "eoc2024-cluster"
+# this needs to be a valid OpenStack router name
+# the Bielefeld cloud uses the following naming convention: <project_name>_router
+# the Router is created by the cloud operator and can not be created by the user
+router_name = "EOCBioHack24_router"
+# set this to the public key you want to use for ssh access
+ssh_public_key_file = "~/.ssh/id_rsa.pub"
+external_network_name = "external"
+# adapt to your needs
+subnet_cidr = "192.168.33.0/24"
+# this is cloud site specific, please check the OpenStack dashboard or CLI to see available image names
+image = "Ubuntu 24.04 LTS (2024-07-03)"
+# de.NBI VM flavors are standardized, please check that your project resource quotas allow for the 
+# creation of the flavors and counts of VMs below 
+bastion_flavor = "de.NBI tiny"
+control_plane_flavor = "de.NBI default"
+# number of control plane VMs (should be uneven number, 3 is usually a good choice for HA clusters)
+control_plane_vm_count = 3
+# flavor for worker VM instances
+worker_flavor = "de.NBI mini"
+# number of worker VM instances
+initial_machinedeployment_replicas = 2

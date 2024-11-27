@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Adding ssh tunnel for Kubernetes API access to local port https://localhost:6443"
+ssh -L localhost:6443:<BASTION_HOST_IP>:6443 <FLOATING_IP>
+

@@ -1,0 +1,9 @@
+plugin: openstack.cloud.openstack
+
+all_projects: false
+expand_hostvars: false
+fail_on_errors: true
+# adapt to the name of your cloud in cloud.yaml
+only_clouds:
+  - "eocbiohack24"
+strict: true
