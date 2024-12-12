@@ -252,25 +252,14 @@ Take note of the token generated for the `dashboard-user` service account. You c
 
 7. You can now access the Kubernetes Dashboard in your browser at `https://localhost:8443` using the token for the `dashboard-user` service account.
 
+### Setting up Ingress and DEX authentication
 
-### Setting up SSL certificates with cert-manager
+Follow the steps outlined in this tutorial:
 
-1. Install cert-manager using the following command (you can omit the `--kubeconfig` flag if you have only one kubeconfig file or have set the `KUBECONFIG` environment variable). This will install cert-manager in the `cert-manager` namespace. You can adapt the version number in the URL to the latest version of cert-manager.
+https://docs.kubermatic.com/kubeone/v1.9/tutorials/creating-clusters-oidc/
+
+Make sure to always issue the kubeconfig parameter:
+
 ```bash
-kubectl --kubeconfig=eoc2024-cluster-kubeconfig apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.1/cert-manager.yaml
-```
-2. Ensure that you have `go` installed and run the following commands to install the cert manager command line tool `cmctl`:
-```bash
-OS=$(go env GOOS); ARCH=$(go env GOARCH); curl -fsSL -o cmctl https://github.com/cert-manager/cmctl/releases/latest/download/cmctl_${OS}_${ARCH}
-chmod +x cmctl
-sudo mv cmctl /usr/local/bin
-```
-3. Create the `letsencrypt-issuer.yaml` file in this directory and set the required variables. The `letsencrypt-issuer.yaml` file should look like this:
-
-```yaml
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
-  name: letsencrypt
-spec:
+helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace kube-system upgrade     --create-namespace --install dex ./charts/oauth
 ```

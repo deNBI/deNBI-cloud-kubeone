@@ -1,0 +1,281 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "hideControls": false,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "$datasource"
+      },
+      "editable": true,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 28,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.4.3",
+      "repeat": "resource",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "editorMode": "code",
+          "expr": "apiserver_storage_objects{resource=~\"$resource\"} >= $min",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "{{ resource }}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "timeRegions": [],
+      "title": "$resource",
+      "transparent": true,
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "revision": 1,
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "Filter",
+        "name": "filter",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "uid": "$datasource"
+        },
+        "definition": "label_values(apiserver_storage_objects{resource=~\".*$filter.*\"}, resource)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Resource",
+        "multi": true,
+        "name": "resource",
+        "options": [],
+        "query": {
+          "query": "label_values(apiserver_storage_objects{resource=~\".*$filter.*\"}, resource)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "0",
+          "value": "0"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Minimum",
+        "multi": false,
+        "name": "min",
+        "options": [
+          {
+            "selected": true,
+            "text": "0",
+            "value": "0"
+          },
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "10",
+            "value": "10"
+          },
+          {
+            "selected": false,
+            "text": "100",
+            "value": "100"
+          },
+          {
+            "selected": false,
+            "text": "250",
+            "value": "250"
+          },
+          {
+            "selected": false,
+            "text": "500",
+            "value": "500"
+          },
+          {
+            "selected": false,
+            "text": "1000",
+            "value": "1000"
+          },
+          {
+            "selected": false,
+            "text": "2500",
+            "value": "2500"
+          },
+          {
+            "selected": false,
+            "text": "5000",
+            "value": "5000"
+          },
+          {
+            "selected": false,
+            "text": "10000",
+            "value": "10000"
+          }
+        ],
+        "query": "0,1,10,100,250,500,1000,2500,5000,10000",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "etcd Objects",
+  "uid": "mafnVWWZk",
+  "version": 1,
+  "weekStart": ""
+}

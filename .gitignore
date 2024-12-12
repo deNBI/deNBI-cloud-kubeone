@@ -1,4 +1,7 @@
 env.sh
+**/charts/cert-manager-vanilla/*
+**/charts/cert-manager/cluster-issuer.yaml
+**/charts/oauth/values.yaml
 # Local .terraform directories
 **/.terraform/*
 
