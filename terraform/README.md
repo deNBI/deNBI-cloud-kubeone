@@ -267,13 +267,10 @@ Before we can deploy both charts, we need to create custom configuration files f
 Copy the `chars/cert-manager/cluster-issuer.yaml.tmpl` file to `charts/cert-manager/cluster-issuer.yaml` and replace the placeholders with your email address. Make sure to retain the enclosing curly braces `{}`.
 
 ```yaml
-...
     email: {replace-with-your-email@test}
-...
 ```
 
 Please also ensure that you have set up the DNS records for the domain you want to use with the NGINX Ingress Controller and Cert-Manager and that they point to the OpenStack load balancer IP address.
-
 
 To deploy applications to the Kubernetes cluster, we will use the NGINX Ingress Controller and Cert-Manager. We will use Helm to install the NGINX Ingress Controller and Cert-Manager.
 
@@ -320,11 +317,13 @@ Lastly, create a `secrets.yaml` file in the `charts/tesk` directory, add the fol
    client_secret: replace-with-ls-aai-oidc-client-secret
 
 ```
+
 You can now deploy TESK using the following command:
 
 ```bash
 helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace tesk upgrade --install tesk ./charts/tesk -f secrets.yaml
 ```
+
 If you have set up the DNS records correctly, you should be able to access TESK at the hostname you have set up for the NGINX Ingress Controller. E.g. if you have set up `tesk.example.com` as the hostname, you should be able to access TESK at `https://tesk.example.com`. The website should be secured with a valid Let's Encrypt certificate and will redirect to the Swagger UI displaying the TESK API documentation.
 
 Congratulations! You have successfully set up a Kubernetes cluster on the de.NBI Cloud Bielefeld and deployed TESK. You can now use TESK to run tasks on your Kubernetes cluster. Please consult the TESK documentation for more information on how to use TESK!
