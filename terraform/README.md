@@ -117,7 +117,7 @@ The [original KubeOne Terraform configuration files](https://github.com/kubermat
 7. The `control_plane_vm_count` variable has been set to `3` to create a 3-node control plane in HA mode.
 8. The load balancer configuration has been adapted to route traffic to the control plane nodes. The load balancer listens on port `6443` and forwards traffic to the control plane nodes on port `6443`. For ssh access to the Kubernetes cluster, the load balancer listens on port `22` and forwards traffic to the bastion node on port `22`. Please adapt the load balancer configuration according to your requirements. If you plan to deploy externally available services, you should add additional listeners and pools to the load balancer configuration, e.g. for port `443` (https).
 
-### Setting up authentication
+### Setting up OpenStack API Authentication
 
 To authenticate with the de.NBI Cloud Bielefeld OpenStack API, you need log in to the Horizon Dashboard and create new API credentials. The following steps describe how to create new API credentials:
 
@@ -302,7 +302,7 @@ Under `auth`, make sure that `mode` is set to `auth`. Please adapt other setting
 If `auth` is set, you also need to set the `auth.client_id` and `auth.client_secret` to use OIDC authentication. These settings must match with existing OIDC settings for a Life Science AAI OIDC client.
 Please check the LS AAI OIDC documentation for more information: https://lifescience-ri.eu/ls-login/relying-parties/how-to-register-and-integrate-a-relying-party-to-ls-login.html
 
-Under `ingress`, set the `ingressClassName` to `"nginx"` to use the NGINX Ingress Controller we created earlier. 
+Under `ingress`, set the `ingressClassName` to `"nginx"` to use the NGINX Ingress Controller we created earlier.
 
 Also under `ingress`, set the `tls_secret_name` to `tesk-tls`.
 
