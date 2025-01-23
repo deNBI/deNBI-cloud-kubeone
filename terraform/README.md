@@ -252,14 +252,79 @@ Take note of the token generated for the `dashboard-user` service account. You c
 
 7. You can now access the Kubernetes Dashboard in your browser at `https://localhost:8443` using the token for the `dashboard-user` service account.
 
-### Setting up Ingress and DEX authentication
+### Setting up NGINX Ingress Controller and Cert-Manager
 
-Follow the steps outlined in this tutorial:
-
-https://docs.kubermatic.com/kubeone/v1.9/tutorials/creating-clusters-oidc/
-
-Make sure to always issue the kubeconfig parameter:
+Our charts directory contains the Helm charts for the NGINX Ingress Controller and Cert-Manager, derived from KubeOne's charts. You can download the charts using the `get-kubeone-charts.sh` script in the `terraform` directory.
 
 ```bash
-helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace kube-system upgrade     --create-namespace --install dex ./charts/oauth
+./get-kubeone-charts.sh
 ```
+
+The downloaded charts will be stored in the `charts-kubeone` directory.
+For newer versions of the Helm charts, please compare the charts in the `charts-kubeone` directory with the charts in the `charts` directory and update the charts accordingly.
+
+Before we can deploy both charts, we need to create custom configuration files for the NGINX Ingress Controller and Cert-Manager. The configuration files are stored in the `charts/nginx-ingress-controller` and `charts/cert-manager` directories respectively.
+Copy the `chars/cert-manager/cluster-issuer.yaml.tmpl` file to `charts/cert-manager/cluster-issuer.yaml` and replace the placeholders with your email address. Make sure to retain the enclosing curly braces `{}`.
+
+```yaml
+...
+    email: {replace-with-your-email@test}
+...
+```
+
+Please also ensure that you have set up the DNS records for the domain you want to use with the NGINX Ingress Controller and Cert-Manager and that they point to the OpenStack load balancer IP address.
+
+
+To deploy applications to the Kubernetes cluster, we will use the NGINX Ingress Controller and Cert-Manager. We will use Helm to install the NGINX Ingress Controller and Cert-Manager.
+
+Use the following commands to install the NGINX Ingress Controller and Cert-Manager from the local `charts` directory:
+
+```bash
+helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace kube-system upgrade --install nginx-ingress ./charts/nginx-ingress-controller
+helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace kube-system upgrade --install cert-manager ./charts/cert-manager
+```
+
+After the installation, we continue with the deployment of TESK.
+Please clone the TESK repository and follow the deployment instructions in the `tesk/README.md` file.
+
+```bash
+git clone https://github.com/elixir-cloud-aai/TESK.git
+```
+
+Change to the `TESK` directory edit the `values.yaml` file in the `charts/tesk` directory and set the following values:
+
+`host_name` - The hostname for the TESK service. This should be the domain name you have set up for the NGINX Ingress Controller. E.g. `tesk.example.com`.
+
+`storage` - The storage to use for TESK. Set this to 'openstack' to use TESK with the OpenStack Cinder CSI driver. Otherwise, you should set this to 'S3'. Please consult the TESK documentation for more information.
+
+Under `auth`, make sure that `mode` is set to `auth`. Please adapt other settings according to the TESK documentation.
+
+If `auth` is set, you also need to set the `auth.client_id` and `auth.client_secret` to use OIDC authentication. These settings must match with existing OIDC settings for a Life Science AAI OIDC client.
+Please check the LS AAI OIDC documentation for more information: https://lifescience-ri.eu/ls-login/relying-parties/how-to-register-and-integrate-a-relying-party-to-ls-login.html
+
+Under `ingress`, set the `ingressClassName` to `"nginx"` to use the NGINX Ingress Controller we created earlier. 
+
+Also under `ingress`, set the `tls_secret_name` to `tesk-tls`.
+
+Also under `ingress`, set the `annotations.cert-manager.io/cluster-issuer` to `letsencrypt-prod`.
+
+Lastly, create a `secrets.yaml` file in the `charts/tesk` directory, add the following keys and replace the placeholders with the correct values:
+
+```yaml
+ ftp:
+   username: replace-with-ftp-username
+   password: replace-with-ftp-password
+
+ auth:
+   client_id: replace-with-ls-aai-oidc-client-id
+   client_secret: replace-with-ls-aai-oidc-client-secret
+
+```
+You can now deploy TESK using the following command:
+
+```bash
+helm --kubeconfig=eoc2024-cluster-kubeconfig --namespace tesk upgrade --install tesk ./charts/tesk -f secrets.yaml
+```
+If you have set up the DNS records correctly, you should be able to access TESK at the hostname you have set up for the NGINX Ingress Controller. E.g. if you have set up `tesk.example.com` as the hostname, you should be able to access TESK at `https://tesk.example.com`. The website should be secured with a valid Let's Encrypt certificate and will redirect to the Swagger UI displaying the TESK API documentation.
+
+Congratulations! You have successfully set up a Kubernetes cluster on the de.NBI Cloud Bielefeld and deployed TESK. You can now use TESK to run tasks on your Kubernetes cluster. Please consult the TESK documentation for more information on how to use TESK!

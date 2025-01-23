@@ -1,5 +1,5 @@
 env.sh
-**/charts/cert-manager-vanilla/*
+**/charts/cert-manager-vanilla/*.yaml
 **/charts/cert-manager/cluster-issuer.yaml
 **/charts/oauth/values.yaml
 # Local .terraform directories
@@ -40,9 +40,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-terraform/TESK
+terraform/TESK/*
 
-*.tar.gz
+*.tar.gz*
 *-kubeconfig
 terraform.tfstate
 terraform.tfstate.backup
